@@ -1,0 +1,53 @@
+# ============================================
+#  SECRETOS — NUNCA se suben a Git
+# ============================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+
+# ============================================
+#  Material de entrada del usuario
+#  (puede ser privado o pesado; no se versiona)
+# ============================================
+input/videos/*
+input/images/*
+input/documents/*
+input/channel-context/*
+!input/**/.gitkeep
+!input/**/LEEME.md
+!input/channel-context/*.example.md
+
+# ============================================
+#  Resultados generados
+# ============================================
+output/*
+!output/.gitkeep
+
+# ============================================
+#  Caché y estado local
+# ============================================
+.cache/
+config/models.local.json
+*.log
+
+# ============================================
+#  Python
+# ============================================
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+
+# ============================================
+#  Sistema / editor
+# ============================================
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

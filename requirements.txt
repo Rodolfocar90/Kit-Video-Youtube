@@ -1,0 +1,9 @@
+# Dependencia única y obligatoria: SDK OFICIAL de Google para Gemini.
+# Es el único proveedor capaz de analizar vídeo completo y URLs de YouTube.
+# https://pypi.org/project/google-genai/
+google-genai>=2.0.0
+
+# --- Opcionales (instálalos solo si vas a usar ese proveedor) ---
+# SDK oficial de Higgsfield (no necesario: el kit habla su API REST con
+# la librería estándar de Python). Descomenta si lo prefieres.
+# higgsfield-client>=0.2.0
