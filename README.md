@@ -9,27 +9,37 @@ Es una carpeta que abres en VS Code y usas con Claude Code.
 
 ---
 
-## Empezar en 4 pasos
+## Empezar
+
+**1.** Descarga esta carpeta y ábrela en VS Code.
+
+**2.** Abre una terminal dentro de VS Code y lanza Claude Code:
 
 ```bash
-# 1. Instala la dependencia (solo la primera vez)
-pip3 install -r requirements.txt
-
-# 2. Configura tu clave de Gemini (se oculta al teclearla)
-python3 scripts/setup.py
-
-# 3. Comprueba que todo funciona
-python3 scripts/doctor.py
+claude
 ```
 
-**4.** Abre la carpeta en VS Code, lanza `claude` y escribe:
+**3.** Escribe esto y pega tus URLs:
 
 ```
-/nuevo-video
+/nuevo-video cómo automatizar la atención al cliente con IA
+https://youtu.be/AAAAAAA  https://youtu.be/BBBBBBB
 ```
 
-El sistema te pregunta qué referencias quieres usar, investiga, y te
-entrega el pack en `output/`.
+Ya está. **A partir de aquí no escribes comandos**: Claude instala lo que
+falte, analiza los vídeos y te deja el pack en `output/`.
+
+### Lo único que harás tú: la clave de Gemini
+
+La primera vez Claude te la pedirá. Es gratis y se tarda un minuto:
+
+1. Entra en [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+   y pulsa **"Create API key"**.
+2. Abre el archivo **`.env`** de esta carpeta en VS Code.
+3. Pega la clave después de `GEMINI_API_KEY=` y guarda.
+
+**No la pegues en el chat.** Ahí quedaría guardada en el historial de la
+conversación. Por eso, y solo por eso, esa parte la haces tú.
 
 Guía detallada: **[SETUP.md](SETUP.md)**
 
@@ -49,24 +59,38 @@ Y nada más. OpenRouter y Higgsfield son opcionales.
 
 ## Cómo se usa
 
-### 1. Pon tu material
+### 1. Dile qué quieres, por el chat
 
-| Qué tienes | Dónde va |
+```
+/nuevo-video
+```
+
+Claude te hace **una sola ronda de preguntas** y tú contestas por el chat:
+
+| Te pregunta | Tú le dices |
 |---|---|
-| URL de un vídeo público de YouTube | apúntala en `input/REFERENCIAS.md` |
+| El tema | «agentes de IA en atención al cliente» |
+| Las referencias | pegas las URLs de YouTube, una detrás de otra |
+| Si tienes foto para la miniatura | «está en mi Escritorio, se llama foto.jpg» |
+| Si hay algo que quieras contar sí o sí | lo que sea |
+
+Los archivos los copia él a `input/` por ti. Tú no mueves nada.
+
+### 2. Si prefieres dejarlo preparado antes (opcional)
+
+| Qué tienes | Dónde puedes dejarlo |
+|---|---|
+| URLs de YouTube y tus notas | `input/REFERENCIAS.md` |
 | Vídeo tuyo o privado | `input/videos/` |
 | Tu foto para la miniatura | `input/images/` |
 | PDFs, informes, notas | `input/documents/` |
-| Datos de tu canal | copia `input/channel-context/canal.example.md` a `canal.md` |
+| Datos de tu canal (una vez) | copia `input/channel-context/canal.example.md` a `canal.md` |
+
+Si ya lo has dejado ahí, Claude lo encuentra solo y **no te lo vuelve a
+preguntar**.
 
 Los vídeos públicos de YouTube **no se descargan**: se analizan
 directamente desde la URL. Es más rápido, más barato y más limpio.
-
-### 2. Pide el vídeo
-
-```
-/nuevo-video cómo automatizar la atención al cliente con IA
-```
 
 ### 3. Recoge el pack
 
@@ -106,9 +130,7 @@ con un índice lateral, funciona sin internet y se imprime a PDF.
 |---|---|
 | `/nuevo-video` | flujo completo |
 | `/pack` | reconstruir el HTML tras editar algo |
-| `/configurar` | cambiar o añadir claves de API |
-| `python3 scripts/doctor.py` | diagnóstico (nunca muestra tus claves) |
-| `python3 scripts/models.py` | ver qué modelos de Gemini tienes |
+| `/configurar` | claves de API y diagnóstico |
 
 También puedes pedir partes sueltas en lenguaje normal: *"dame 10 títulos
 más para este vídeo"*, *"genera otra miniatura del concepto 2"*,
@@ -150,9 +172,14 @@ Detalle completo en [SETUP.md](SETUP.md) y en la sección de seguridad de
 
 ## Si algo falla
 
+Escríbelo en el chat: *"algo va mal"*. Claude ejecuta el diagnóstico y te
+dice qué falta y cómo arreglarlo.
+
+Si quieres verlo tú:
+
 ```bash
 python3 scripts/doctor.py
 ```
 
-Dice exactamente qué falta y cómo arreglarlo. Los problemas típicos y sus
-soluciones están en [LIMITACIONES.md](LIMITACIONES.md).
+Nunca muestra tus claves. Los problemas típicos y sus soluciones están en
+[LIMITACIONES.md](LIMITACIONES.md).

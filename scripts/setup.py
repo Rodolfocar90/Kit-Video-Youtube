@@ -2,8 +2,19 @@
 """Asistente de configuración del Kit de Vídeo para YouTube.
 
   python3 scripts/setup.py              -> configura lo que falte
+  python3 scripts/setup.py --crear-env  -> SOLO crea el .env vacío y sale
   python3 scripts/setup.py --reconfigure -> vuelve a preguntar todo
   python3 scripts/setup.py --provider gemini|openrouter|higgsfield
+
+Hay dos formas de poner las claves, las dos seguras:
+
+  A) Sin terminal: `--crear-env` crea el archivo y tú pegas la clave en
+     VS Code. Lo puede lanzar el agente por ti; no hay secretos en juego
+     porque el archivo se crea vacío.
+  B) Con terminal: el modo interactivo la pide y la oculta al teclearla.
+
+Lo que NUNCA se hace es pedir la clave por el chat: ahí queda grabada en
+el historial de la conversación.
 
 Reglas de seguridad que cumple este script:
   * Las claves se escriben SOLO en .env (permisos 600) y en ninguna otra parte.
@@ -162,14 +173,65 @@ def configure(provider: str, existing: dict[str, str], reconfigure: bool) -> dic
     return updates
 
 
+def crear_env_vacio() -> int:
+    """Crea .env sin pedir nada y explica dónde pegar la clave.
+
+    Pensado para que lo ejecute el agente: no toca ningún secreto, solo
+    prepara el archivo con permisos 600 para que el usuario pegue la clave
+    en su editor. Si el archivo ya existe, no lo sobrescribe.
+    """
+    print(BANNER)
+    ya_existia = ENV_FILE.exists()
+    for folder in (INPUT_DIR, OUTPUT_DIR):
+        folder.mkdir(parents=True, exist_ok=True)
+    ensure_env_file()
+
+    existing = envfile.parse()
+    # Solo interesan las claves secretas; las rutas de configuración
+    # (p. ej. la "application" de Higgsfield) no son secretos.
+    configuradas = [k for meta in PROVIDERS.values() for k, _ in meta["claves"]
+                    if k in envfile.SECRET_KEYS and existing.get(k)]
+
+    print(f"   Archivo {'ya existente' if ya_existia else 'creado'}: {rel(ENV_FILE)}")
+    print("   Permisos 600 (solo tu usuario puede leerlo) e ignorado por Git.\n")
+
+    if configuradas:
+        print("   Claves ya presentes (enmascaradas):")
+        for key in configuradas:
+            print(f"     {key} = {envfile.mask(existing.get(key))}")
+        print()
+
+    if "GEMINI_API_KEY" not in configuradas:
+        print("   QUÉ TIENES QUE HACER AHORA (sin terminal):\n")
+        print("     1. Consigue tu clave gratis en:")
+        print("        https://aistudio.google.com/apikey\n")
+        print(f"     2. Abre este archivo en VS Code:  {rel(ENV_FILE)}\n")
+        print("     3. Busca esta línea y pega la clave justo después del '=':")
+        print("          GEMINI_API_KEY=")
+        print("        Queda así (sin espacios, sin comillas):")
+        print("          GEMINI_API_KEY=AIzaSy...tu_clave\n")
+        print("     4. Guarda el archivo (Ctrl+S / Cmd+S).\n")
+        print("   No pegues la clave en el chat: quedaría en el historial.")
+        print("   Cuando hayas guardado, di 'ya está' y se valida sola.\n")
+    else:
+        print("   Gemini ya está configurado. Validación:")
+        print("     python3 scripts/doctor.py\n")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Configura el kit paso a paso.")
+    parser.add_argument("--crear-env", action="store_true",
+                        help="solo crea el .env vacío y explica dónde pegar la clave")
     parser.add_argument("--reconfigure", action="store_true",
                         help="vuelve a preguntar incluso lo ya configurado")
     parser.add_argument("--provider", choices=sorted(PROVIDERS),
                         help="configura solo un proveedor")
     parser.add_argument("--skip-deps", action="store_true")
     args = parser.parse_args()
+
+    if getattr(args, "crear_env", False):
+        return crear_env_vacio()
 
     print(BANNER)
 

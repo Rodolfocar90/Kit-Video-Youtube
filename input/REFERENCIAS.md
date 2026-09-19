@@ -1,7 +1,17 @@
 # Referencias para el próximo vídeo
 
-Apunta aquí las URLs de YouTube que quieres usar como referencia.
-Claude Code lee este archivo al empezar, así te ahorras escribirlas en el chat.
+**Este archivo es opcional.** Lo normal es pegarle las URLs a Claude
+directamente en el chat:
+
+```
+/nuevo-video agentes de IA en atención al cliente
+https://youtu.be/AAAAAAA  https://youtu.be/BBBBBBB
+```
+
+Rellena este archivo solo si prefieres dejarlo preparado antes de abrir
+Claude. Si está relleno, lo lee al empezar y no te pregunta las URLs.
+Si le das las URLs por el chat, las escribe él aquí para que quede
+constancia de lo que se analizó.
 
 **Requisito**: los vídeos tienen que ser **públicos**. La API de Gemini no
 puede acceder a vídeos privados o no listados; ésos hay que descargarlos a

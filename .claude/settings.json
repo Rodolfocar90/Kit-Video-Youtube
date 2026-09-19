@@ -15,7 +15,12 @@
       "Read(output/**)",
       "Read(config/**)",
       "Write(output/**)",
-      "Edit(output/**)"
+      "Edit(output/**)",
+      "Bash(pip3 install -r requirements.txt)",
+      "Bash(cp:*)",
+      "Bash(mkdir -p input/*)",
+      "Write(input/REFERENCIAS.md)",
+      "Edit(input/REFERENCIAS.md)"
     ],
     "deny": [
       "Read(.env)",

@@ -31,6 +31,21 @@ y scripts de Python que tú ejecutas.
    tienes, escribe "No verificado en el material". Esto no es negociable:
    el creador va a decir esto en cámara delante de su audiencia.
 
+## Principio de uso: TODO por el chat
+
+El usuario **no edita archivos y no escribe comandos**. Es el creador del
+canal, no un programador. Te lo dice por el chat y tú lo ejecutas: pega
+URLs en la conversación, te dice dónde tiene una foto y tú la copias con
+`cp`, y si falta el SDK lo instalas tú con
+`pip3 install -r requirements.txt`.
+
+**Una sola excepción: su clave de API.** Esa la pone él, porque si pasa
+por el chat queda grabada en el historial de la conversación. El camino
+por defecto no es el terminal: ejecuta
+`python3 scripts/setup.py --crear-env` (crea el archivo vacío, no toca
+ningún secreto) y dile que pegue la clave en `.env` desde VS Code y guarde.
+El modo interactivo del terminal es la alternativa, solo si la pide.
+
 ## Flujo de ejecución
 
 El usuario escribe `/nuevo-video` y tú sigues la skill `nuevo-video`.
@@ -82,6 +97,10 @@ parte más lenta y más cara del flujo.
 
 ## Dónde leer las entradas
 
+El canal de entrada normal es **el chat**: el usuario pega las URLs y
+escribe sus notas ahí. Estas rutas son el complemento, para quien prefiera
+dejarlo preparado antes.
+
 | Ruta | Qué hay | Lee siempre |
 |---|---|---|
 | `input/REFERENCIAS.md` | URLs de YouTube y notas del usuario | **sí, primero** |
@@ -92,6 +111,13 @@ parte más lenta y más cara del flujo.
 
 Mira estas rutas **antes** de preguntar nada. Si el usuario ya apuntó las
 URLs en `REFERENCIAS.md`, no le hagas repetirlas.
+
+Cuando el usuario te dé URLs o notas por el chat, **escríbelas tú** en
+`input/REFERENCIAS.md` y en `proyecto.json` después de crear el proyecto.
+Así queda registro de qué se analizó y no tiene que volver a pegarlas.
+
+Si te dice que un archivo está en otra carpeta de su ordenador, cópialo tú:
+`cp "/ruta/que/te/diga/foto.jpg" input/images/`. No le mandes moverlo.
 
 ## Dónde guardar las salidas
 
@@ -116,7 +142,7 @@ Todos se ejecutan con `python3 scripts/<nombre>.py`. Llevan `--help`.
 
 | Script | Para qué |
 |---|---|
-| `setup.py` | asistente de claves (**interactivo: lo ejecuta el usuario**) |
+| `setup.py` | claves. `--crear-env` lo lanzas tú; sin flags es interactivo y lo ejecuta el usuario |
 | `doctor.py` | diagnóstico completo; `--offline` sin red |
 | `models.py` | qué modelos de Gemini hay disponibles |
 | `new_project.py` | crea la carpeta del proyecto |
@@ -127,10 +153,12 @@ Todos se ejecutan con `python3 scripts/<nombre>.py`. Llevan `--help`.
 
 ## Seguridad — obligatorio
 
-- **Nunca pidas una clave de API por el chat.** El usuario la introduce en
-  su terminal con `python3 scripts/setup.py`, que la oculta al teclearla.
-  Si el usuario pega una clave en la conversación, dile que la revoque y
-  genere otra: ya ha quedado en el historial.
+- **Nunca pidas una clave de API por el chat**, ni "para comprobarla".
+  Prepara el archivo con `python3 scripts/setup.py --crear-env` y dile que
+  pegue la clave en `.env` desde VS Code, o que use el asistente
+  interactivo del terminal (`python3 scripts/setup.py`), que la oculta al
+  teclearla. Si el usuario pega una clave en la conversación, dile que la
+  revoque y genere otra: ya ha quedado en el historial.
 - **Nunca leas ni imprimas `.env`.** Ni con `cat`, ni con `Read`, ni con
   `env`, ni con `printenv`. Está bloqueado en `.claude/settings.json`.
   Para saber qué hay configurado: `python3 scripts/doctor.py` (enmascara).
@@ -164,7 +192,8 @@ Está todo detallado en `LIMITACIONES.md`. Lo esencial:
 
 Es el creador del canal, no un programador. Directo y sin rodeos:
 
-- Comandos completos, listos para copiar y pegar.
+- No le des comandos que ejecutar: ejecútalos tú. Solo le das un comando
+  si él pide hacerlo a mano, o si es el asistente interactivo de claves.
 - Rutas exactas de los archivos generados.
 - Cuando algo falla: qué ha fallado, por qué y el comando que lo arregla.
 - Al entregar el pack: ángulo recomendado, título + miniatura recomendados
