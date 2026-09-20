@@ -20,19 +20,23 @@
       "Bash(cp:*)",
       "Bash(mkdir -p input/*)",
       "Write(input/REFERENCIAS.md)",
-      "Edit(input/REFERENCIAS.md)"
+      "Edit(input/REFERENCIAS.md)",
+      "Read(.env.example)",
+      "Bash(cat .env.example)"
     ],
     "deny": [
       "Read(.env)",
-      "Read(.env.*)",
       "Edit(.env)",
       "Write(.env)",
       "Bash(cat .env)",
-      "Bash(cat .env.*)",
       "Bash(env)",
       "Bash(printenv:*)",
       "Bash(echo $GEMINI_API_KEY)",
-      "Bash(grep:* .env)"
+      "Bash(grep:* .env)",
+      "Read(.env.local)",
+      "Read(.env.*.local)",
+      "Bash(cat .env.local)",
+      "Bash(cat .env.*.local)"
     ]
   }
 }
